@@ -9,121 +9,84 @@ body.no-bg{background: linear-gradient(135deg,#0f0c29,#302b63,#24243e) !importan
 #loader::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.65);z-index:0}
 #loader > *{position:relative;z-index:1}
 #loader.hide{opacity:0;pointer-events:none}
-.spinner{width:55px;height:55px;border:4px solid rgba(255,255,255,0.2);border-top:4px solid #00aaff;border-radius:50%;animation:spin 1s linear infinite;box-shadow:0 0 15px #00aaff}
+.spinner{width:55px;height:55px;border:4px solid rgba(255,255,255,0.2);border-top:4px solid #00aaff;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.title{color:#fff;font-size:28px;font-weight:900;margin:18px 0;text-shadow:0 0 20px #00aaff, 0 3px 10px #000;letter-spacing:1px}
+.title{color:#fff;font-size:28px;font-weight:900;margin:18px 0;text-shadow:0 0 20px #00aaff}
 .sub{color:#fff;opacity:0.8;font-size:13px;margin-bottom:12px}
-.main-input{width:100%;max-width:520px;padding:16px 20px;border-radius:30px;border:none;outline:none;font-size:20px;text-align:center;font-weight:bold;margin-bottom:10px;box-shadow:0 4px 20px rgba(0,170,255,0.4)}
+.main-input{width:100%;max-width:520px;padding:16px 20px;border-radius:30px;border:none;outline:none;font-size:20px;text-align:center;font-weight:bold;margin-bottom:10px}
 .search{width:100%;max-width:520px;padding:11px 18px;border-radius:30px;border:none;font-size:13px;margin-bottom:14px}
 .grid{width:100%;max-width:540px;display:grid;gap:10px;padding-bottom:30px}
-.card{background:rgba(255,255,255,0.97);padding:12px 14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 15px rgba(0,0,0,0.3)}
-.label{font-size:10px;color:#777;font-weight:bold;letter-spacing:0.5px;max-width:180px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.card{background:rgba(255,255,255,0.97);padding:12px 14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center}
+.label{font-size:10px;color:#777;font-weight:bold;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .preview{font-size:20px;flex:1;overflow:hidden;white-space:nowrap;margin-right:10px;min-height:26px}
-.copy{background:#111;color:#fff;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;transition:0.15s}
-.copy:active{transform:scale(0.92)}
+.copy{background:#111;color:#fff;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 24px;border-radius:30px;display:none;z-index:10000}
-.footer{margin:40px 0 20px;color:#fff;opacity:0.7;font-size:13px;text-align:center;text-shadow:0 1px 5px #000}
-.footer b{color:#00aaff;text-shadow:0 0 10px #00aaff}
+.footer{margin:40px 0 20px;color:#fff;opacity:0.7;font-size:13px;text-align:center}
+.footer b{color:#00aaff}
 </style></head><body>
 
 <div id="loader">
   <div class="spinner"></div>
-  <div id="percent" style="color:#fff;font-size:42px;font-weight:900;margin-top:20px;text-shadow:0 0 15px #00aaff">10%</div>
-  <div style="color:#fff;opacity:0.9;margin-top:5px;letter-spacing:1px">Loading Fonts-New...</div>
+  <div id="percent" style="color:#fff;font-size:42px;font-weight:900;margin-top:20px">10%</div>
+  <div style="color:#fff;opacity:0.9;margin-top:5px">Loading Fonts-New...</div>
   <div style="width:240px;height:6px;background:rgba(255,255,255,0.15);border-radius:10px;margin-top:18px;overflow:hidden">
-    <div id="bar" style="height:100%;width:10%;background:linear-gradient(90deg,#00aaff,#00ffaa);border-radius:10px;transition:width 0.2s"></div>
+    <div id="bar" style="height:100%;width:10%;background:#00aaff;border-radius:10px;transition:width 0.2s"></div>
   </div>
 </div>
 
 <div class="title">Fonts-New ✨</div>
-<div class="sub">Type & Convert - 60+ Stylish Fonts</div>
+<div class="sub">Type & Convert</div>
 <input class="main-input" id="mainInput" placeholder="Type here... ✍️" autofocus>
 <input class="search" id="search" placeholder="🔍 Search font...">
-
 <div class="grid" id="grid"></div>
 <div class="toast" id="toast">Copied ✅</div>
-<div class="footer">Made with 💙 by <b>Sanuka</b> 🤭</div>
+<div class="footer">Made with 💙 by <b>Sanuka</b></div>
 
 <script>
 const bg=new Image(); bg.onerror=()=>document.body.classList.add('no-bg'); bg.src='bg.jpg';
 const ld=new Image(); ld.onerror=()=>{document.getElementById('loader').style.background='#0a0a1a'}; ld.src='loading.jpg';
-
 let p=10; const pe=document.getElementById('percent'), bar=document.getElementById('bar'), loader=document.getElementById('loader');
 const iv=setInterval(()=>{p+=10; if(p>100)p=100; pe.textContent=p+'%'; bar.style.width=p+'%'; if(p>=100){clearInterval(iv); setTimeout(()=>loader.classList.add('hide'),600)}},200);
 
-function convertText(t, type){
-  try{
-    if(!t) return type;
-    let r=""; for(let ch of t){
-      let l=ch.toLowerCase(), code=l.charCodeAt(0);
-      if(code<97||code>122){ r+=ch; continue; }
-      let i=code-97;
-      switch(type){
-        case 'Bold': r+=String.fromCodePoint(0x1D5EE+i); break;
-        case 'Italic': r+=String.fromCodePoint(0x1D608+i); break;
-        case 'Bold Italic': r+=String.fromCodePoint(0x1D63C+i); break;
-        case 'Double Struck': r+=String.fromCodePoint(0x1D552+i); break;
-        case 'Cursive': r+=String.fromCodePoint(0x1D4B6+i); break;
-        case 'Monospace': r+=String.fromCodePoint(0x1D68A+i); break;
-        case 'Circled': r+=String.fromCodePoint(0x24B6+i); break;
-        case 'Full Width': r+=String.fromCodePoint(0xFF21+i); break;
-        case 'Small Caps': const sc={a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ғ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',q:'ǫ',r:'ʀ',s:'s',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',x:'x',y:'ʏ',z:'ᴢ'}; r+=sc[l]||ch; break;
-        case 'Fraktur': r+=String.fromCodePoint(0x1D51E+i); break;
-        case 'Blackletter': r+=String.fromCodePoint(0x1D5A0+i); break;
-        case 'Sans Serif': r+=String.fromCodePoint(0x1D5A0-26+i); break;
-        case 'Sans Serif Bold': r+=String.fromCodePoint(0x1D5EE+i); break;
-        case 'Sans Serif Italic': r+=String.fromCodePoint(0x1D608+i); break;
-        case 'Sans Serif Bold Italic': r+=String.fromCodePoint(0x1D63C+i); break;
-        case 'Wide Text': r+=String.fromCodePoint(0xFF21+i); break;
-        case 'Mathematical Bold': r+=String.fromCodePoint(0x1D400+i); break;
-        case 'Mathematical Italic': r+=String.fromCodePoint(0x1D434+i); break;
-        case 'Parenthesis Font': r+=String.fromCodePoint(0x249C+i); break;
-        case 'Square Brackets': r+=String.fromCodePoint(0x1F130+i); break;
-        case 'Negative Circled': r+=String.fromCodePoint(0x1F150+i); break;
-        case 'Japanese Style': r+=ch; break;
-        case 'Script Bold': r+=String.fromCodePoint(0x1D4EA+i); break;
-        case 'Superscript': const sup={a:'ᵃ',b:'ᵇ',c:'ᶜ',d:'ᵈ',e:'ᵉ',f:'ᶠ',g:'ᵍ',h:'ʰ',i:'ⁱ',j:'ʲ',k:'ᵏ',l:'ˡ',m:'ᵐ',n:'ⁿ',o:'ᵒ',p:'ᵖ',q:'q',r:'ʳ',s:'ˢ',t:'ᵗ',u:'ᵘ',v:'ᵛ',w:'ʷ',x:'ˣ',y:'ʸ',z:'ᶻ'}; r+=sup[l]||ch; break;
-        case 'Star Wrapped': r+=ch; break;
-        case 'Ribbon Style': r+=ch; break;
-        case 'Glitter Style': r+=ch; break;
-        case 'Neon Style': r+=ch; break;
-        case 'Diamond Style': r+=ch; break;
-        case 'Flower Style': r+=ch; break;
-        // Old fonts
-        case '𝓦𝓻𝓲𝓽𝓽𝓮𝓷': r+=String.fromCodePoint(0x1D4EA+i); break;
-        case '𝘪𝘵𝘢𝘭𝘪𝘤': r+=String.fromCodePoint(0x1D44E+i); break;
-        case '𝕆𝕦𝕥𝕝𝕚𝕟𝕖': r+=String.fromCodePoint(0x1D552+i); break;
-        default: 
-          if(type.includes('Strike')) r+=ch+'\u0336';
-          else if(type.includes('Underline')) r+=ch+'\u0332';
-          else if(type.includes('Roadside')) r+=ch+'\u0324';
-          else if(type.includes('Breaks')) r+=ch+'\u20E0';
-          else if(type.includes('Fun eye')) r+=ch+'\u033A';
-          else if(type.includes('Water')) r+=ch+'\u030A';
-          else if(type.includes('spacious')) r+=ch+' ';
-          else r+=ch;
-          break;
-      }
-    }
-    // Wrap styles
-    if(!t) return type;
-    if(type==='Star Wrapped') return '✨ '+r+' ✨';
-    if(type==='Ribbon Style') return '🎀【 '+r+' 】🎀';
-    if(type==='Glitter Style') return '✧･ﾟ: *✧･ﾟ:* '+r+' *:･ﾟ✧*:･ﾟ✧';
-    if(type==='Neon Style') return '『🔥』'+r+'『🔥』';
-    if(type==='Diamond Style') return '♦️【 '+r+' 】♦️';
-    if(type==='Flower Style') return '🌸「 '+r+' 」🌸';
-    return r;
-  }catch(e){ return t||type; }
+function convert(t, name){
+  if(!t) return name;
+  let out=""; const ln=name.toLowerCase();
+  for(let ch of t){
+    let low=ch.toLowerCase(), code=low.charCodeAt(0), isLetter=code>=97&&code<=122, idx=isLetter?code-97:-1;
+    if(!isLetter){ out+=ch; continue; }
+    
+    // FIXED - UPPERCASE walatath wada karanawa, original ch eka use karala
+    if(ln.includes('written')||ln==='cursive') out+=String.fromCodePoint(0x1D4B6+idx);
+    else if(ln.includes('bold') && !ln.includes('serif')) out+=String.fromCodePoint(0x1D5EE+idx);
+    else if(ln==='italic' || ln==='𝘪𝘵𝘢𝘭𝘪𝘤') out+=String.fromCodePoint(0x1D608+idx);
+    else if(ln.includes('outline')||ln.includes('double')) out+=String.fromCodePoint(0x1D552+idx);
+    else if(ln.includes('capital')||ln==='small caps'||ln==='small'||ln.includes('ᴄᴀᴩɪᴛᴀʟ')){const m={a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ғ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',q:'ǫ',r:'ʀ',s:'s',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',x:'x',y:'ʏ',z:'ᴢ'}; out+=m[low]||ch;}
+    else if(ln.includes('monospace')||ln.includes('𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎')) out+=String.fromCodePoint(0x1D68A+idx);
+    else if(ln.includes('serif')) out+=String.fromCodePoint(0x1D4EA+idx);
+    else if(ln.includes('buttons')||ln.includes('🇧')) out+=String.fromCodePoint(0x1F1E6+idx)+" ";
+    else if(ln==='high' || ln.includes('ʰⁱᵍʰ') || ln.includes('superscript')){const m={a:'ᵃ',b:'ᵇ',c:'ᶜ',d:'ᵈ',e:'ᵉ',f:'ᶠ',g:'ᵍ',h:'ʰ',i:'ⁱ',j:'ʲ',k:'ᵏ',l:'ˡ',m:'ᵐ',n:'ⁿ',o:'ᵒ',p:'ᵖ',q:'q',r:'ʳ',s:'ˢ',t:'ᵗ',u:'ᵘ',v:'ᵛ',w:'ʷ',x:'ˣ',y:'ʸ',z:'ᶻ'}; out+=m[low]||ch;}
+    else if(ln.includes('medieval')||ln.includes('𝕸𝖊𝖉𝖎𝖊𝖛𝖆𝖑')||ln.includes('fraktur')||ln.includes('blackletter')||ln.includes('𝔉𝔯𝔞𝔨𝔱𝔲𝔯')||ln.includes('𝕭𝖑𝖆𝖈𝖐𝖑𝖊𝖙𝖙𝖊𝖗')) out+=String.fromCodePoint(0x1D51E+idx);
+    else if(ln.includes('gummy')||ln.includes('🅶︎')){const arr=['🅶︎','🅷︎','🅸︎','🅹︎','🅺︎','🅻︎','🅼︎','🅽︎','🅾︎','🅿︎','🆀︎','🆁︎','🆂︎','🆃︎','🆄︎','🆅︎','🆆︎','🆇︎','🆈︎','🆉︎','🅰︎','🅱︎','🅲︎','🅳︎','🅴︎','🅵︎']; out+=arr[idx]||ch;}
+    else if(ln.includes('lilac')||ln.includes('ℓιℓα¢')){const m={a:'ᴀ',b:'ʙ',c:'¢',d:'ᴅ',e:'ᴇ',f:'ғ',g:'ɢ',h:'ʜ',i:'ι',j:'ᴊ',k:'ᴋ',l:'ℓ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',q:'ǫ',r:'ʀ',s:'s',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',x:'x',y:'ʏ',z:'ᴢ'}; out+=m[low]||ch;}
+    else if(ln.includes('stike')||ln.includes('strike')||ln.includes('s̶t̶i̶k̶e̶')) out+=ch+'\u0336';
+    else if(ln.includes('philo')||ln.includes('🄿🄷🄸🄻🄾')) out+=String.fromCodePoint(0x1F130+idx);
+    else if(ln.includes('greenish')||ln.includes('🅖︎🅡︎🅔︎')) out+=String.fromCodePoint(0x1F150+idx);
+    else if(ln.includes('roadside')||ln.includes('r̤o̤a̤d̤')) out+=ch+'\u0324';
+    else if(ln.includes('beethoven')||ln.includes('вєєthσvєn')||ln.includes('beeth')){const m={a:'ᴀ',b:'в',c:'ᴄ',d:'є',e:'є',f:'ғ',g:'ɢ',h:'н',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'σ',p:'ᴘ',q:'ǫ',r:'ʀ',s:'s',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',x:'x',y:'ʏ',z:'ᴢ'}; out+=m[low]||ch;}
+    else if(ln.includes('breaks')||ln.includes('b⃠')||ln.includes('birtel')) out+=ch+'\u20E0';
+    else if(ln.includes('bluish')||ln.includes('Ⓑ︎')||ln.includes('circled')) out+=String.fromCodePoint(0x24B6+idx);
+    else if(ln.includes('underline')||ln.includes('u̲n̲d̲')) out+=ch+'\u0332';
+    else if(ln.includes('spacious')||ln.includes('ｓｐａｃｉｏｕｓ')) out+=ch+' ';
+    else if(ln.includes('water')||ln.includes('ẘåt̊')) out+=ch+'\u030A';
+    else if(ln.includes('fun eye')||ln.includes('f̺u̺n̺')) out+=ch+'\u033A';
+    else out+=ch;
+  }
+  return out;
 }
 
-const styles=[
-"Bold","Italic","Bold Italic","Double Struck","Cursive","Monospace","Circled","Full Width","Small Caps","Fraktur","Blackletter","Sans Serif","Sans Serif Bold","Sans Serif Italic","Sans Serif Bold Italic","Wide Text","Mathematical Bold","Mathematical Italic","Parenthesis Font","Square Brackets","Negative Circled","Japanese Style","Script Bold","Superscript",
-"Star Wrapped","Ribbon Style","Glitter Style","Neon Style","Diamond Style","Flower Style",
-"𝓦𝓻𝓲𝓽𝓽𝓮𝓷","𝗕𝗢𝗟𝗗","𝕆𝕦𝕥𝕝𝕚𝕟𝕖","ᴄᴀᴩɪᴛᴀʟ","ʰⁱᵍʰ","S̶t̶i̶k̶e̶ t̶h̶r̶o̶u̶g̶h̶","U̲n̲d̲e̲r̲l̲i̲n̲e̲","R̤o̤a̤d̤s̤i̤d̤e̤","B⃠r⃠e⃠a⃠k⃠s⃠","F̺u̺n̺ e̺y̺e̺","W̊åt̊e̊r̊","ｓｐａｃｉｏｕｓ","вєєthσvєn","Ⓑ︎ⓛ︎ⓤ︎ⓘ︎ⓢ︎ⓗ︎"
-];
+const styles=["𝓦𝓻𝓲𝓽𝓽𝓮𝓷","𝗕𝗢𝗟𝗗","𝘪𝘵𝘢𝘭𝘪𝘤","𝕆𝕦𝕥𝕝𝕚𝕟𝕖","ᴄᴀᴩɪᴛᴀʟ","𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎","𝐒𝐞𝐫𝐢𝐟","🇧‌🇺‌🇹‌🇹‌🇴‌🇳‌🇸‌","ʰⁱᵍʰ","𝕸𝖊𝖉𝖎𝖊𝖛𝖆𝖑","🅶︎🆄︎🅼︎🅼︎🆈︎","ℓιℓα¢","᭙ꪶ𝘴𝓽ꪮꪗ","S̶t̶i̶k̶e̶ t̶h̶r̶o̶u̶g̶h̶","🄿🄷🄸🄻🄾🅂🄾🄿🄷🅈","🅖︎🅡︎🅔︎🅔︎🅝︎🅘︎🅢︎🅗︎","R̤o̤a̤d̤s̤i̤d̤e̤","вєєthσvєn","👌🌱🎵🅰⭕","B⃠r⃠e⃠a⃠k⃠s⃠","Ⓑ︎ⓛ︎ⓤ︎ⓘ︎ⓢ︎ⓗ︎","ᑕᒪᗩIᖇE","U̲n̲d̲e̲r̲l̲i̲n̲e̲","ΓЯД∇ΞL","Ｇ✿dd㉫＄＄","†◎мм◎ґґ◎ẘ","şųķovę","爪モㄥㄥ口山","ｓｐａｃｉｏｕｓ","W̊åt̊e̊r̊","ꀍꂦꎭꏂꌃꂦꀎꈤꀷ","SPΔRRΩШ","тԻᾰḉк","Ѧℓї℮η","F̺u̺n̺ e̺y̺e̺","iႶႽႠႩႶႠ"];
 
-let cur=[]; function build(t){return styles.map(n=>({name:n,sample:convertText(t,n)}))}
+let cur=[]; function build(t){return styles.map(n=>({name:n,sample:convert(t,n)}))}
 function render(list){
   cur=list; const g=document.getElementById('grid'); g.innerHTML='';
   list.forEach((f,i)=>{
@@ -133,19 +96,16 @@ function render(list){
   });
   g.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
     const it=cur[parseInt(b.dataset.i)];
-    navigator.clipboard.writeText(it.sample).catch(()=>{
-      const ta=document.createElement('textarea');ta.value=it.sample;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-    });
+    navigator.clipboard.writeText(it.sample);
     document.getElementById('toast').style.display='block'; b.textContent='Done!';
     setTimeout(()=>{document.getElementById('toast').style.display='none'; b.textContent='Copy'},1000);
   }));
 }
-
 document.getElementById('mainInput').addEventListener('input',e=>render(build(e.target.value)));
 document.getElementById('search').addEventListener('input',e=>{
   const q=e.target.value.toLowerCase();
   if(!q){render(build(document.getElementById('mainInput').value)); return;}
-  render(cur.filter(f=>f.name.toLowerCase().includes(q) || f.sample.toLowerCase().includes(q)));
+  render(cur.filter(f=>f.name.toLowerCase().includes(q)));
 });
 render(build(""));
 </script></body></html>
